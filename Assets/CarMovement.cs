@@ -109,6 +109,8 @@ public class CarMovement : MonoBehaviour
             {
                 sensors[i] = hit.distance / sensorDist;
             }
+            //draw sensors
+            Debug.DrawLine(raycast.origin, raycast.origin + (dirs[i] * sensorDist), Color.red);
         }
     }
 
