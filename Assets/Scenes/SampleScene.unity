@@ -304,7 +304,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &963194225
 GameObject:
@@ -382,12 +382,12 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: 0.18050134, y: 0.006493608, z: -0.0011918908, w: 0.9835526}
+  m_LocalPosition: {x: 0.018478943, y: 2.1398244, z: -0.947053}
+  m_LocalScale: {x: 1.058539, y: 1.7391304, z: 0.4442124}
   m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_Father: {fileID: 4167733656918857}
+  m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &1610632615
 Rigidbody:
@@ -880,11 +880,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   acceleration: 0
+  accelRate: 0.02
+  forwardSpeed: 11.4
   turn: 0
+  turnRate: 0.02
   lifetime: 0
   overallFitness: 0
   distanceWeight: 1.4
   speedWeight: 0.2
+  sensorWeight: 0.1
+  sensors:
+  - 0
+  - 0
+  - 0
+  sensorDist: 5
+  wallMask:
+    serializedVersion: 2
+    m_Bits: 0
+  successGate: 1000
 --- !u!1 &1678917882783975
 GameObject:
   m_ObjectHideFlags: 0
@@ -1140,8 +1153,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1642630390158485}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.92, y: -0.26049998, z: -5.48298}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.94469833, y: 0.575, z: 2.2511752}
   m_Children:
   - {fileID: 4743966798122897}
@@ -1162,8 +1175,9 @@ Transform:
   - {fileID: 4976023086188681}
   - {fileID: 4196564610108573}
   - {fileID: 4871592984414755}
+  - {fileID: 963194228}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4173641548827129
 Transform:
@@ -3374,7 +3388,7 @@ GameObject:
   - component: {fileID: 5200558758635410339}
   - component: {fileID: 1068609960011696690}
   - component: {fileID: 2142132633011251252}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: wd
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -3494,7 +3508,7 @@ Transform:
   - {fileID: 6757531841741681038}
   - {fileID: 698800756}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7614874558020064626
 GameObject:

@@ -9,13 +9,13 @@ public class CarMovement : MonoBehaviour
 
     //physics
     [Range(-1f, 1f)]
-    public float acceleration;
+    public float acceleration;      // output of nn
     public float accelRate = 0.02f;
     public float forwardSpeed = 11.4f;
     private Vector3 moveVec;
 
     [Range(-1f, 1f)]
-    public float turn;
+    public float turn;              // output of nn
     public float turnRate = 0.02f;
 
     //idle timer
@@ -38,8 +38,8 @@ public class CarMovement : MonoBehaviour
 
     //sensors
     public float[] sensors = {0,0,0};
-    public float sensorDist = 20f;
-    private LayerMask wallMask;
+    public float sensorDist = 5f;
+    public LayerMask wallMask;
 
     //fitness kill gates (time, fitness)
     public List<Tuple<float, float>> gates;
@@ -49,7 +49,7 @@ public class CarMovement : MonoBehaviour
     {
         startPosition = transform.position;
         startRotation = transform.eulerAngles;
-        wallMask = LayerMask.NameToLayer("Wall");
+        wallMask = LayerMask.GetMask("Wall");
         gates = new List<Tuple<float, float>>
         {
             //add gates here
@@ -68,6 +68,21 @@ public class CarMovement : MonoBehaviour
     {
         
     }
+
+    private void FixedUpdate()
+    {
+        Sensors();
+
+        //neural network here
+        Move(acceleration,turn);
+        lifetime += Time.deltaTime;
+
+        EvalFitness();
+
+        //acceleration = 0f;
+        //turn = 0f;
+    }
+
     //moves racer
     public void Move(float accel, float rot)
     {
@@ -90,10 +105,9 @@ public class CarMovement : MonoBehaviour
             raycast = new Ray(transform.position, dirs[i]);
             RaycastHit hit;
             //TODO: limit sensor dist
-            if (Physics.Raycast(raycast, out hit, wallMask))
+            if (Physics.Raycast(raycast, out hit, sensorDist, wallMask))
             {
                 sensors[i] = hit.distance / sensorDist;
-                Debug.Log("Sensor " + i + ": " + sensors[i]);
             }
         }
     }
