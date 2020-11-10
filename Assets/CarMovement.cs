@@ -8,7 +8,7 @@ public class CarMovement : MonoBehaviour
     private Vector3 startRotation;
 
     //physics
-    [Range(-1f, 1f)]
+    [Range(0f, 1f)]
     public float acceleration;      // output of nn
     public float accelRate = 0.02f;
     public float forwardSpeed = 11.4f;
@@ -44,6 +44,8 @@ public class CarMovement : MonoBehaviour
     //fitness kill gates (time, fitness)
     public List<Tuple<float, float>> gates;
     public float successGate = 1000f;
+    public bool useGate = true;
+    public bool useWalls = true;
 
     private void Awake()
     {
@@ -59,12 +61,6 @@ public class CarMovement : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
     {
         
     }
@@ -134,11 +130,16 @@ public class CarMovement : MonoBehaviour
 
         //add up fitness weights
         overallFitness = (totalDist * distanceWeight) + (avgSpeed * speedWeight) + (sensorTotalAvg * sensorWeight);
-        
+
         //check kill gates
-        foreach(Tuple<float, float> gate in gates) {
-            if (lifetime > gate.Item1 && overallFitness < gate.Item2) {
-                Reset();
+        if (useGate)
+        {
+            foreach (Tuple<float, float> gate in gates)
+            {
+                if (lifetime > gate.Item1 && overallFitness < gate.Item2)
+                {
+                    Reset();
+                }
             }
         }
         //success gate
@@ -151,7 +152,7 @@ public class CarMovement : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         //hitting a wall = death
-        if(collision.gameObject.tag == "Wall")
+        if(collision.gameObject.tag == "Wall" && useWalls)
         {
             Reset();
         }
