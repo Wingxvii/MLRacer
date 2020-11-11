@@ -100,7 +100,6 @@ public class CarMovement : MonoBehaviour
         for(int i = 0; i < dirs.Length; i++) {
             raycast = new Ray(transform.position, dirs[i]);
             RaycastHit hit;
-            //TODO: limit sensor dist
             if (Physics.Raycast(raycast, out hit, sensorDist, wallMask))
             {
                 sensors[i] = hit.distance / sensorDist;
