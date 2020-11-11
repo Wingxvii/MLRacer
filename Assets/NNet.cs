@@ -96,6 +96,12 @@ public class NeuralNet : MonoBehaviour
         //output layer
         outputLayer = ((hiddenLayers[hiddenLayers.Count - 1] * weights[weights.Count - 1]) + biases[biases.Count - 1]).PointwiseTanh();
 
-        return (outputLayer[0,0], (float)Math.Tanh(outputLayer[0,1]));
+        //outputs acceleration and turn
+        return (Sigmoid(outputLayer[0,0]), (float)Math.Tanh(outputLayer[0,1]));
+    }
+
+    //sigmoid function activation
+    private float Sigmoid(float s) {
+        return (1 / (1 + Mathf.Exp(-s)));
     }
 }
