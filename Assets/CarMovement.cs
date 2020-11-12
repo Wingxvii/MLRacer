@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
+
+[RequireComponent(typeof(NeuralNet))]
 public class CarMovement : MonoBehaviour
 {
     //spawn
@@ -17,6 +19,12 @@ public class CarMovement : MonoBehaviour
     [Range(-1f, 1f)]
     public float turn;              // output of nn
     public float turnRate = 0.02f;
+
+    //neural network
+    private NeuralNet nnet;
+    [Header("Network")]
+    public int n_layers = 1;
+    public int n_neurons = 10;
 
     //idle timer
     public float lifetime = 0f;
@@ -49,6 +57,10 @@ public class CarMovement : MonoBehaviour
 
     private void Awake()
     {
+        nnet = GetComponent<NeuralNet>();
+        //TODO: Implement genetic algorithm at some point
+        nnet.Init(n_layers, n_neurons);
+
         startPosition = transform.position;
         startRotation = transform.eulerAngles;
         wallMask = LayerMask.GetMask("Wall");
@@ -69,7 +81,8 @@ public class CarMovement : MonoBehaviour
     {
         Sensors();
 
-        //neural network here
+        (acceleration, turn) = nnet.RunNetwork(sensors[0], sensors[1], sensors[2]);                     //TODO: adapt network to accomadate variable size input and remove hardcoded sensor arguments
+
         Move(acceleration,turn);
         lifetime += Time.deltaTime;
 
@@ -160,6 +173,8 @@ public class CarMovement : MonoBehaviour
     //reset everthing
     public void Reset()
     {
+        nnet.Init(n_layers, n_neurons);
+
         lifetime = 0f;
         totalDist = 0f;
         avgSpeed = 0f;

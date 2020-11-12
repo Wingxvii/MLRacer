@@ -943,6 +943,7 @@ GameObject:
   - component: {fileID: 64765194301512837}
   - component: {fileID: 1610632615}
   - component: {fileID: 1642630390158486}
+  - component: {fileID: 1642630390158487}
   m_Layer: 9
   m_Name: Car
   m_TagString: AI Car
@@ -967,6 +968,8 @@ MonoBehaviour:
   forwardSpeed: 11.4
   turn: 0
   turnRate: 0.02
+  n_layers: 1
+  n_neurons: 10
   lifetime: 0
   overallFitness: 0
   distanceWeight: 1.4
@@ -983,6 +986,20 @@ MonoBehaviour:
   successGate: 1000
   useGate: 1
   useWalls: 1
+--- !u!114 &1642630390158487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1642630390158485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a2776ef817fad294c989ba5cc6d718ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  biases: []
+  fitness: 0
 --- !u!1 &1678917882783975
 GameObject:
   m_ObjectHideFlags: 0
