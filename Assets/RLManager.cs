@@ -15,7 +15,7 @@ public class RLManager : MonoBehaviour
     public int worseAgentSelection = 3;
     public int numberToCrossover;
 
-    public List<int> genePool = new List<int>();
+    private List<int> genePool = new List<int>();
     private int naturalSelected;
     private NeuralNet[] population;
 
@@ -74,6 +74,7 @@ public class RLManager : MonoBehaviour
         NeuralNet[] newGeneration = NaturalSelection();
         Crossover(newGeneration);
 
+        /*
         //mutate crossovers
         for (int x = 0; x < naturalSelected; x++)
         {
@@ -85,6 +86,7 @@ public class RLManager : MonoBehaviour
                 }
             }
         }
+        */
 
         //fill the rest up with randos
         FillPopulationWithRandomValues(newGeneration, naturalSelected);
