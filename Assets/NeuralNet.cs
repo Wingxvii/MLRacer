@@ -32,7 +32,7 @@ public class NeuralNet : MonoBehaviour
         outputLayer = Matrix<float>.Build.Dense(1, 2);
 
         //add hidden layers + biases
-        for (int i = 0; i < hiddenLayersCount + 1; i++) {                                             //TODO: this should be -1??
+        for (int i = 0; i < hiddenLayersCount + 1; i++) {
             hiddenLayers.Add(Matrix<float>.Build.Dense(1, hiddenNeuronsCount));
             biases.Add(Random.Range(-1f,1f));
 
@@ -51,6 +51,24 @@ public class NeuralNet : MonoBehaviour
 
         RandomizeWeights();
     }
+
+    /*
+    //init by copy instead of reference
+    public static NeuralNet InitCopy(NeuralNet copy, int hiddenLayerCount, int hiddenNeuronCount) {
+        NeuralNet net = new NeuralNet();
+
+        //copy weigths over
+        List<Matrix<float>> newWeights = new List<Matrix<float>>();
+        for (int x = 0; x < copy.weights.Count; x++) {
+            Matrix<float> currentWeight = Matrix<float>.Build.DenseOfMatrix(copy.weights[x]);
+            newWeights.Add(currentWeight);
+        }
+
+        List<float> newBiases = new List<float>(copy.biases);
+
+
+    }
+    */
 
     //add random weights to neural net
     public void RandomizeWeights() { 

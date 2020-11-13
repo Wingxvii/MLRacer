@@ -45,7 +45,7 @@ public class CarMovement : MonoBehaviour
     public float sensorWeight = 0.1f;
 
     //sensors
-    public float[] sensors = {0,0,0};
+    public float[] sensors = { 0, 0, 0 };
     public float sensorDist = 5f;
     public LayerMask wallMask;
 
@@ -58,8 +58,6 @@ public class CarMovement : MonoBehaviour
     private void Awake()
     {
         nnet = GetComponent<NeuralNet>();
-        //TODO: Implement genetic algorithm at some point
-        nnet.Init(n_layers, n_neurons);
 
         startPosition = transform.position;
         startRotation = transform.eulerAngles;
@@ -71,19 +69,13 @@ public class CarMovement : MonoBehaviour
         };
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     private void FixedUpdate()
     {
         Sensors();
 
         (acceleration, turn) = nnet.RunNetwork(sensors[0], sensors[1], sensors[2]);                     //TODO: adapt network to accomadate variable size input and remove hardcoded sensor arguments
 
-        Move(acceleration,turn);
+        Move(acceleration, turn);
         lifetime += Time.deltaTime;
 
         EvalFitness();
@@ -108,9 +100,9 @@ public class CarMovement : MonoBehaviour
         //init sensor directions
         Vector3[] dirs = { transform.forward + transform.right, transform.forward, transform.forward - transform.right };
         Ray raycast;
-        
+
         //raycast each sensor
-        for(int i = 0; i < dirs.Length; i++) {
+        for (int i = 0; i < dirs.Length; i++) {
             raycast = new Ray(transform.position, dirs[i]);
             RaycastHit hit;
             if (Physics.Raycast(raycast, out hit, sensorDist, wallMask))
@@ -122,7 +114,7 @@ public class CarMovement : MonoBehaviour
         }
     }
 
-   
+
     //calculate fitness based on reward criteria
     private void EvalFitness() {
         //calculate distance moved
@@ -134,7 +126,7 @@ public class CarMovement : MonoBehaviour
 
         //calculate sensor averages
         float sensorTotalAvg = 0f;
-        foreach(float sensor in sensors)
+        foreach (float sensor in sensors)
         {
             sensorTotalAvg += sensor;
         }
@@ -150,30 +142,41 @@ public class CarMovement : MonoBehaviour
             {
                 if (lifetime > gate.Item1 && overallFitness < gate.Item2)
                 {
-                    Reset();
+                    Death();
                 }
             }
         }
         //success gate
         if (overallFitness >= successGate) {
             //save to json
-            Reset();
+            Death();
         }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         //hitting a wall = death
-        if(collision.gameObject.tag == "Wall" && useWalls)
+        if (collision.gameObject.tag == "Wall" && useWalls)
         {
-            Reset();
+            //Reset();
+            Death();
         }
+    }
+
+    //agent death
+    private void Death() {
+        GameObject.FindObjectOfType<RLManager>().Death(overallFitness, nnet);
+    }
+
+    //reset network
+    public void ResetWithNetwork(NeuralNet net) {
+        nnet = net;
+        Reset();
     }
 
     //reset everthing
     public void Reset()
     {
-        nnet.Init(n_layers, n_neurons);
 
         lifetime = 0f;
         totalDist = 0f;
