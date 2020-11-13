@@ -73,16 +73,35 @@ public class RLManager : MonoBehaviour
         //iterate generation
         NeuralNet[] newGeneration = NaturalSelection();
         Crossover(newGeneration);
-        Mutate(newGeneration);
+
+        //mutate crossovers
+        for (int x = 0; x < naturalSelected; x++)
+        {
+            for (int y = 0; y < newGeneration[x].weights.Count; y++)
+            {
+                if (Random.Range(0.0f, 1.0f) < mutationRate)
+                {
+                    newGeneration[x].weights[y] = Mutate(newGeneration[x].weights[y]);
+                }
+            }
+        }
+
+        //fill the rest up with randos
+        FillPopulationWithRandomValues(newGeneration, naturalSelected);
+
+        population = newGeneration;
+        currentGenome = 0;
+        ResetToCurrentGenome();
     }
 
     //pick the best and worst agents in the population
     private NeuralNet[] NaturalSelection() {
         //copy over
-        NeuralNet[] pop = (NeuralNet[])population.Clone();
-
+        NeuralNet[] pop = new NeuralNet[initialPop];
+            
         //select best agents
         for (int x = 0; x < bestAgentSelection; x++) {
+            pop[naturalSelected] = NeuralNet.InitCopy(population[x],car.n_layers, car.n_neurons);
             pop[naturalSelected].fitness = 0;
             naturalSelected++;
 
@@ -112,9 +131,79 @@ public class RLManager : MonoBehaviour
 
     //crossover genetics from parent agents
     private void Crossover(NeuralNet[] newGeneration) {
-        for (int i = 0; i < numberToCrossover; i += 2) { 
-            
+        for (int x = 0; x < numberToCrossover; x += 2) {
+            int AIndex = worseAgentSelection;
+            int BIndex = x + 1;
+
+            if (genePool.Count >= 1) {
+                for (int y = 0; y < 100; y++) {
+                    AIndex = genePool[Random.Range(0, genePool.Count)];
+                    BIndex = genePool[Random.Range(0, genePool.Count)];
+
+                    //make sure they're not the same
+                    if(AIndex != BIndex) { break; }
+                }
+            }
+
+            NeuralNet child1 = new NeuralNet();
+            NeuralNet child2 = new NeuralNet();
+
+            child1.Init(car.n_layers, car.n_neurons);
+            child2.Init(car.n_layers, car.n_neurons);
+
+            //randomly select weights from the parents
+            for (int y = 0; y < child1.weights.Count; y++) {
+                //crossover using coinflip
+                if (Random.Range(0.0f, 1.0f) > 0.5f) {
+                    child1.weights[y] = population[AIndex].weights[y];               //do matrixes instead of individual values to reduce complexity
+                    child2.weights[y] = population[BIndex].weights[y];
+                }
+                else
+                {
+                    child1.weights[y] = population[BIndex].weights[y];
+                    child2.weights[y] = population[AIndex].weights[y];
+                }
+            }
+
+            //randomly select biases from the parents
+            for (int y = 0; y < child1.biases.Count; y++)
+            {
+                if (Random.Range(0.0f, 1.0f) > 0.5f)
+                {
+                    child1.biases[y] = population[AIndex].biases[y];
+                    child2.biases[y] = population[BIndex].biases[y];
+                }
+                else
+                {
+                    child1.biases[y] = population[BIndex].biases[y];
+                    child2.biases[y] = population[AIndex].biases[y];
+                }
+            }
+            newGeneration[naturalSelected] = child1;
+            naturalSelected++;
+            newGeneration[naturalSelected] = child2;
+            naturalSelected++;
+
         }
+    }
+
+    //mutate to add diversity beyond innitial population
+    private Matrix<float> Mutate(Matrix<float> weights)
+    {
+
+        int randomPoints = Random.Range(1, (weights.RowCount * weights.ColumnCount) / 7);           //reduce the amount of mutation done
+
+        Matrix<float> mutatedWeight = Matrix<float>.Build.DenseOfMatrix(weights);                   //dont change the parent
+
+        for (int x = 0; x < randomPoints; x++)
+        {
+            int randomCol = Random.Range(0, mutatedWeight.ColumnCount);
+            int randomRow = Random.Range(0, mutatedWeight.RowCount);
+
+            mutatedWeight[randomCol, randomRow] = Mathf.Clamp(mutatedWeight[randomCol, randomRow] + Random.Range(-1f, 1f), -1f, 1f);
+        }
+
+        return mutatedWeight;
     }
 
     //sort by fitness

@@ -17,6 +17,26 @@ public class NeuralNet : MonoBehaviour
 
     public float fitness;
 
+    //init by copy instead of reference
+    public static NeuralNet InitCopy(NeuralNet copy, int hiddenLayerCount, int hiddenNeuronCount)
+    {
+        NeuralNet net = new NeuralNet();
+
+        //copy weigths over
+        List<Matrix<float>> newWeights = new List<Matrix<float>>();
+        for (int x = 0; x < copy.weights.Count; x++)
+        {
+            Matrix<float> currentWeight = Matrix<float>.Build.DenseOfMatrix(copy.weights[x]);
+            newWeights.Add(currentWeight);
+        }
+
+        List<float> newBiases = new List<float>(copy.biases);
+        //TODO: Add the rest of this class
+
+        return net;
+
+    }
+
     //initalize neural net
     public void Init(int hiddenLayersCount, int hiddenNeuronsCount)
     {
@@ -26,6 +46,7 @@ public class NeuralNet : MonoBehaviour
         weights.Clear();
         biases.Clear();
         outputLayer.Clear();
+        fitness = 0;
 
         //reinit input and output layers
         inputLayer = Matrix<float>.Build.Dense(1, 3);
@@ -51,24 +72,6 @@ public class NeuralNet : MonoBehaviour
 
         RandomizeWeights();
     }
-
-    /*
-    //init by copy instead of reference
-    public static NeuralNet InitCopy(NeuralNet copy, int hiddenLayerCount, int hiddenNeuronCount) {
-        NeuralNet net = new NeuralNet();
-
-        //copy weigths over
-        List<Matrix<float>> newWeights = new List<Matrix<float>>();
-        for (int x = 0; x < copy.weights.Count; x++) {
-            Matrix<float> currentWeight = Matrix<float>.Build.DenseOfMatrix(copy.weights[x]);
-            newWeights.Add(currentWeight);
-        }
-
-        List<float> newBiases = new List<float>(copy.biases);
-
-
-    }
-    */
 
     //add random weights to neural net
     public void RandomizeWeights() { 
