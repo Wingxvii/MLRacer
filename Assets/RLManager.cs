@@ -52,7 +52,7 @@ public class RLManager : MonoBehaviour
 
     //increment genome fitness
     public void Death(float fitness, NeuralNet network) {
-        if (currentGenome < population.Length - 1)                                                                         //is this genome or generation?
+        if (currentGenome < population.Length - 1)
         {
             population[currentGenome].fitness = fitness;
             currentGenome++;

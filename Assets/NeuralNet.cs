@@ -23,18 +23,23 @@ public class NeuralNet : MonoBehaviour
         NeuralNet net = new NeuralNet();
 
         //copy weigths over
-        List<Matrix<float>> newWeights = new List<Matrix<float>>();
+        net.weights = new List<Matrix<float>>();
         for (int x = 0; x < copy.weights.Count; x++)
         {
-            Matrix<float> currentWeight = Matrix<float>.Build.DenseOfMatrix(copy.weights[x]);
-            newWeights.Add(currentWeight);
+            net.weights.Add(Matrix<float>.Build.DenseOfMatrix(copy.weights[x]));
         }
 
-        List<float> newBiases = new List<float>(copy.biases);
-        //TODO: Add the rest of this class
+        //copy biases over
+        net.biases = new List<float>(copy.biases);
+
+        //add hidden layers
+        for (int x = 0; x < hiddenLayerCount + 1; x++)
+        {
+            Matrix<float> newHiddenLayer = Matrix<float>.Build.Dense(1, hiddenNeuronCount);
+            net.hiddenLayers.Add(newHiddenLayer);
+        }
 
         return net;
-
     }
 
     //initalize neural net

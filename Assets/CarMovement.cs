@@ -55,6 +55,9 @@ public class CarMovement : MonoBehaviour
     public bool useGate = true;
     public bool useWalls = true;
 
+    //track agent statistics
+    public static int alphaAgents = 0;
+
     private void Awake()
     {
         nnet = GetComponent<NeuralNet>();
@@ -148,7 +151,8 @@ public class CarMovement : MonoBehaviour
         }
         //success gate
         if (overallFitness >= successGate) {
-            //save to json
+            // TODO: Save this to Json
+            alphaAgents++;
             Death();
         }
     }
