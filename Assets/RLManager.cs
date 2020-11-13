@@ -3,6 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using MathNet.Numerics.LinearAlgebra;
 
+/*
+ *TODO List:
+ * 
+ * 1. Save to JSON
+ * 2. Retrain with 2 AI cars
+ * 3. Create game with user player
+ * 4. Improving population sorting algorithm
+ * 5. Pool training
+ * 6. Improve performance by messing with hyperparameters
+ * 
+ */
+
+
 public class RLManager : MonoBehaviour
 {
     public CarMovement car;
@@ -74,7 +87,6 @@ public class RLManager : MonoBehaviour
         NeuralNet[] newGeneration = NaturalSelection();
         Crossover(newGeneration);
 
-        /*
         //mutate crossovers
         for (int x = 0; x < naturalSelected; x++)
         {
@@ -86,7 +98,6 @@ public class RLManager : MonoBehaviour
                 }
             }
         }
-        */
 
         //fill the rest up with randos
         FillPopulationWithRandomValues(newGeneration, naturalSelected);
@@ -202,7 +213,7 @@ public class RLManager : MonoBehaviour
             int randomCol = Random.Range(0, mutatedWeight.ColumnCount);
             int randomRow = Random.Range(0, mutatedWeight.RowCount);
 
-            mutatedWeight[randomCol, randomRow] = Mathf.Clamp(mutatedWeight[randomCol, randomRow] + Random.Range(-1f, 1f), -1f, 1f);
+            mutatedWeight[randomRow, randomCol] = Mathf.Clamp(mutatedWeight[randomRow, randomCol] + Random.Range(-1f, 1f), -1f, 1f);
         }
 
         return mutatedWeight;
