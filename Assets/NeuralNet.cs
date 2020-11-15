@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using Json.Net;
 using MathNet.Numerics.LinearAlgebra;
 using Random = UnityEngine.Random;
+using System.IO;
 
 public class NeuralNet : MonoBehaviour
 {
@@ -15,12 +17,39 @@ public class NeuralNet : MonoBehaviour
     public List<float> biases = new List<float>();                         //biases
     public Matrix<float> outputLayer = Matrix<float>.Build.Dense(1, 2);     //[acceleration, turn] output layer
 
+    public int hiddenLayersCount = 0;
+    public int hiddenNeuronsCount = 0;
+
     public float fitness;
 
+    //save data
+    public string path;
+    public bool fromSavedNetwork = false;
+    public TextAsset networkFile;
+
+    //start ONLY WITHOUT training manager
+    public void Start()
+    {
+        //load saved network instead of from training
+        if (fromSavedNetwork)
+        {
+            if (networkFile)
+            {
+                Load(networkFile.ToString());
+            }
+            else {
+                Debug.LogError("Network Load File Missing");
+            }
+        }
+    }
+
     //init by copy instead of reference
-    public static NeuralNet InitCopy(NeuralNet copy, int hiddenLayerCount, int hiddenNeuronCount)
+    public static NeuralNet InitCopy(NeuralNet copy, int hiddenLayersCount, int hiddenNeuronsCount)
     {
         NeuralNet net = new NeuralNet();
+
+        net.hiddenLayersCount = hiddenLayersCount;
+        net.hiddenNeuronsCount = hiddenNeuronsCount;
 
         //copy weigths over
         net.weights = new List<Matrix<float>>();
@@ -33,9 +62,9 @@ public class NeuralNet : MonoBehaviour
         net.biases = new List<float>(copy.biases);
 
         //add hidden layers
-        for (int x = 0; x < hiddenLayerCount + 1; x++)
+        for (int x = 0; x < hiddenLayersCount + 1; x++)
         {
-            Matrix<float> newHiddenLayer = Matrix<float>.Build.Dense(1, hiddenNeuronCount);
+            Matrix<float> newHiddenLayer = Matrix<float>.Build.Dense(1, hiddenNeuronsCount);
             net.hiddenLayers.Add(newHiddenLayer);
         }
 
@@ -56,6 +85,9 @@ public class NeuralNet : MonoBehaviour
         //reinit input and output layers
         inputLayer = Matrix<float>.Build.Dense(1, 3);
         outputLayer = Matrix<float>.Build.Dense(1, 2);
+
+        this.hiddenLayersCount = hiddenLayersCount;
+        this.hiddenNeuronsCount = hiddenNeuronsCount;
 
         //add hidden layers + biases
         for (int i = 0; i < hiddenLayersCount + 1; i++) {
@@ -78,6 +110,92 @@ public class NeuralNet : MonoBehaviour
         RandomizeWeights();
     }
 
+    //object used for json seralize
+    private class SerializableNetwork
+    {
+        public int hiddenLayersCount;
+        public int hiddenNeuronsCount;
+
+        public float[][,] weights;
+        public float[] biases;
+    }
+
+    //load from json method
+    public void Load(string json)
+    {
+        //clear it all
+        inputLayer.Clear();
+        hiddenLayers.Clear();
+        weights.Clear();
+        biases.Clear();
+        outputLayer.Clear();
+        fitness = 0;
+
+        //reinit input and output layers
+        inputLayer = Matrix<float>.Build.Dense(1, 3);
+        outputLayer = Matrix<float>.Build.Dense(1, 2);
+
+        Debug.Log(json);
+
+        SerializableNetwork save = JsonNet.Deserialize<SerializableNetwork>(json);
+
+        this.hiddenLayersCount = save.hiddenLayersCount;
+        this.hiddenNeuronsCount = save.hiddenNeuronsCount;
+
+        for (int i = 0; i < save.hiddenLayersCount + 1; i++)
+        {
+            hiddenLayers.Add(Matrix<float>.Build.Dense(1, save.hiddenNeuronsCount));
+        }
+
+        weights = WeightArrayToMatrix(save.weights);
+        biases = new List<float>(save.biases);
+        Debug.Log("Network Loaded.");
+    }
+
+    //json save method
+    public void Save() 
+    {
+        //init path and id
+        string ID = DateTime.Now.Ticks.ToString();
+        path = Application.dataPath + "/NetworkFiles";
+
+        SerializableNetwork save = new SerializableNetwork();
+
+        save.hiddenLayersCount = hiddenLayersCount;
+        save.hiddenNeuronsCount = hiddenNeuronsCount;
+
+        save.weights = WeightMatrixToArray(weights);
+        save.biases = biases.ToArray();
+
+        string json = JsonNet.Serialize(save);
+        File.WriteAllText(path + "/network" + ID + ".txt", json);
+        Debug.Log("Network Saved.");
+    }
+
+
+    // converts list of matrix to list of float array to be serialised
+    private static float[][,] WeightMatrixToArray(List<Matrix<float>> weights) 
+    { 
+        List<float[,]> newWeights = new List<float[,]>();
+        foreach (Matrix<float> w in weights)
+        {
+            newWeights.Add(w.ToArray());
+        }
+        return newWeights.ToArray();
+    }
+
+    // converts de serialised float array to list of matrices
+    private static List<Matrix<float>> WeightArrayToMatrix(float[][,] weights)
+    {
+        List<Matrix<float>> newWeights = new List<Matrix<float>>();
+        foreach (float[,] w in weights)
+        {
+            newWeights.Add(Matrix<float>.Build.DenseOfArray(w));
+        }
+        return newWeights;
+    }
+
+
     //add random weights to neural net
     public void RandomizeWeights() { 
         for(int x = 0; x < weights.Count; x++){
@@ -89,7 +207,6 @@ public class NeuralNet : MonoBehaviour
             }
         }
     }
-
 
     public (float, float) RunNetwork(float a, float b, float c) {
         inputLayer[0, 0] = a;
@@ -118,4 +235,6 @@ public class NeuralNet : MonoBehaviour
     private float Sigmoid(float s) {
         return (1 / (1 + Mathf.Exp(-s)));
     }
+
 }
+

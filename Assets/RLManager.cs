@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using MathNet.Numerics.LinearAlgebra;
-
+using UnityEngine.UI;
 /*
  *TODO List:
  * 
@@ -12,7 +12,7 @@ using MathNet.Numerics.LinearAlgebra;
  * 4. Improving population sorting algorithm
  * 5. Pool training
  * 6. Improve performance by messing with hyperparameters
- * 
+ * 7. Add checkpoint gates for more accurate fitness calculation
  */
 
 
@@ -32,7 +32,10 @@ public class RLManager : MonoBehaviour
     private int naturalSelected;
     private NeuralNet[] population;
 
-    [Header("Debug View")]
+    public Text generationText;
+    public Text genomeText;
+    public Text fitnessText;
+
     public int currentGeneration;
     public int currentGenome;
 
@@ -234,5 +237,13 @@ public class RLManager : MonoBehaviour
                 }
             }
         }
-    } 
+    }
+
+    //updates text display  
+    private void FixedUpdate()
+    {
+        generationText.text = currentGeneration.ToString();
+        genomeText.text = currentGenome.ToString();
+        fitnessText.text = car.overallFitness.ToString();
+    }
 }

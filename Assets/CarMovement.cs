@@ -82,9 +82,6 @@ public class CarMovement : MonoBehaviour
         lifetime += Time.deltaTime;
 
         EvalFitness();
-
-        //acceleration = 0f;
-        //turn = 0f;
     }
 
     //moves racer
@@ -151,7 +148,7 @@ public class CarMovement : MonoBehaviour
         }
         //success gate
         if (overallFitness >= successGate) {
-            // TODO: Save this to Json
+            nnet.Save();
             alphaAgents++;
             Death();
         }
