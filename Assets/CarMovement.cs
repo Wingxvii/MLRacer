@@ -9,15 +9,18 @@ public class CarMovement : MonoBehaviour
     private Vector3 startPosition;
     private Vector3 startRotation;
 
-    //physics
+    [Header("Controls")]
+    public bool saveButton = false;     //budget save button
     [Range(0f, 1f)]
     public float acceleration;      // output of nn
+    [Range(-1f, 1f)]
+    public float turn;              // output of nn
+
+
+    [Header("Physics")]
     public float accelRate = 0.02f;
     public float forwardSpeed = 11.4f;
     private Vector3 moveVec;
-
-    [Range(-1f, 1f)]
-    public float turn;              // output of nn
     public float turnRate = 0.02f;
 
     //neural network
@@ -59,6 +62,8 @@ public class CarMovement : MonoBehaviour
     public bool inTraining = false;
 
     public RLManager learningManager;
+
+
     private void Awake()
     {
         nnet = GetComponent<NeuralNet>();
@@ -83,6 +88,12 @@ public class CarMovement : MonoBehaviour
         lifetime += Time.deltaTime;
 
         EvalFitness();
+
+        //update save button
+        if (saveButton) {
+            OnSaveButton();
+            saveButton = false;
+        }
     }
 
     //moves racer
@@ -149,10 +160,16 @@ public class CarMovement : MonoBehaviour
         }
         //success gate
         if (overallFitness >= successGate) {
-            nnet.Save();
+            //nnet.Save();
             alphaAgents++;
             Death();
         }
+    }
+
+    //button for manually saving button
+    public void OnSaveButton()
+    {
+        nnet.Save();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -166,7 +183,7 @@ public class CarMovement : MonoBehaviour
 
     //agent death
     private void Death() {
-        if (inTraining)
+        if (inTraining && learningManager)
         {
             learningManager.Death(overallFitness, nnet);
         }
