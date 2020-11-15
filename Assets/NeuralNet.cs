@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using Json.Net;
+using Newtonsoft.Json;
 using MathNet.Numerics.LinearAlgebra;
 using Random = UnityEngine.Random;
 using System.IO;
@@ -23,15 +23,14 @@ public class NeuralNet : MonoBehaviour
     public float fitness;
 
     //save data
-    public string path;
-    public bool fromSavedNetwork = false;
+    private string path;
     public TextAsset networkFile;
 
     //start ONLY WITHOUT training manager
     public void Start()
     {
         //load saved network instead of from training
-        if (fromSavedNetwork)
+        if (!GetComponent<CarMovement>().inTraining)
         {
             if (networkFile)
             {
@@ -111,7 +110,7 @@ public class NeuralNet : MonoBehaviour
     }
 
     //object used for json seralize
-    private class SerializableNetwork
+    public class SerializableNetwork
     {
         public int hiddenLayersCount;
         public int hiddenNeuronsCount;
@@ -137,7 +136,7 @@ public class NeuralNet : MonoBehaviour
 
         Debug.Log(json);
 
-        SerializableNetwork save = JsonNet.Deserialize<SerializableNetwork>(json);
+        SerializableNetwork save = JsonConvert.DeserializeObject<SerializableNetwork>(json);
 
         this.hiddenLayersCount = save.hiddenLayersCount;
         this.hiddenNeuronsCount = save.hiddenNeuronsCount;
@@ -167,7 +166,7 @@ public class NeuralNet : MonoBehaviour
         save.weights = WeightMatrixToArray(weights);
         save.biases = biases.ToArray();
 
-        string json = JsonNet.Serialize(save);
+        string json = JsonConvert.SerializeObject(save);
         File.WriteAllText(path + "/network" + ID + ".txt", json);
         Debug.Log("Network Saved.");
     }

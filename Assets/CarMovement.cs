@@ -53,11 +53,12 @@ public class CarMovement : MonoBehaviour
     public List<Tuple<float, float>> gates;
     public float successGate = 1000f;
     public bool useGate = true;
-    public bool useWalls = true;
 
     //track agent statistics
     public static int alphaAgents = 0;
+    public bool inTraining = false;
 
+    public RLManager learningManager;
     private void Awake()
     {
         nnet = GetComponent<NeuralNet>();
@@ -157,16 +158,18 @@ public class CarMovement : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         //hitting a wall = death
-        if (collision.gameObject.tag == "Wall" && useWalls)
+        if (collision.gameObject.tag == "Wall" && inTraining)
         {
-            //Reset();
             Death();
         }
     }
 
     //agent death
     private void Death() {
-        GameObject.FindObjectOfType<RLManager>().Death(overallFitness, nnet);
+        if (inTraining)
+        {
+            learningManager.Death(overallFitness, nnet);
+        }
     }
 
     //reset network

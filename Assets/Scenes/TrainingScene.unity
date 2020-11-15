@@ -11147,7 +11147,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1432369095
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21080,7 +21080,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4167733656918857}
-  - component: {fileID: 33016886693897471}
   - component: {fileID: 64765194301512837}
   - component: {fileID: 1610632615}
   - component: {fileID: 1642630390158486}
@@ -21109,6 +21108,7 @@ MonoBehaviour:
   forwardSpeed: 11.4
   turn: 0
   turnRate: 0.02
+  nnet: {fileID: 1642630390158487}
   n_layers: 1
   n_neurons: 10
   lifetime: 0
@@ -21124,9 +21124,9 @@ MonoBehaviour:
   wallMask:
     serializedVersion: 2
     m_Bits: 0
-  successGate: 10
+  successGate: 1000
   useGate: 1
-  useWalls: 1
+  learningManager: {fileID: 1432369095}
 --- !u!114 &1642630390158487
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21144,8 +21144,8 @@ MonoBehaviour:
   hiddenNeuronsCount: 0
   fitness: 0
   path: 
-  fromSavedNetwork: 1
-  networkFile: {fileID: 4900000, guid: 9efff454a1a1b8f4ebcfc3c27b588999, type: 3}
+  inTraining: 1
+  networkFile: {fileID: 0}
 --- !u!4 &4167733656918857
 Transform:
   m_ObjectHideFlags: 0
@@ -21164,14 +21164,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &33016886693897471
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1642630390158485}
-  m_Mesh: {fileID: 4300028, guid: 09daf63b07ae7ae438ec02fd869b9967, type: 3}
 --- !u!64 &64765194301512837
 MeshCollider:
   m_ObjectHideFlags: 0
