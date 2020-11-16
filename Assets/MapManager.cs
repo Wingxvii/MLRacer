@@ -83,6 +83,9 @@ public class MapManager : MonoBehaviour
             OpenTrack(currentTrackNum);
         }
 
+        //iterate laps
+        car.CompletedLap();
+
         //reset hit logic
         firstHit = false;
         secondHit = false;

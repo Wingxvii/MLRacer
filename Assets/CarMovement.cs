@@ -44,6 +44,10 @@ public class CarMovement : MonoBehaviour
     public float speedWeight = 0.2f;
     private float avgSpeed;
 
+    //weight of a completed lap
+    private float lapsCompleted = 0;
+    public float lapCompletedWeight = 300.0f;
+
     //weight of the sensors
     public float sensorWeight = 0.1f;
 
@@ -160,7 +164,7 @@ public class CarMovement : MonoBehaviour
         sensorTotalAvg /= sensors.Length;
 
         //add up fitness weights
-        overallFitness = (totalDist * distanceWeight) + (avgSpeed * speedWeight) + (sensorTotalAvg * sensorWeight);
+        overallFitness = (totalDist * distanceWeight) + (avgSpeed * speedWeight) + (sensorTotalAvg * sensorWeight) + (lapsCompleted * lapCompletedWeight);
 
         //check kill gates
         if (useGate)
@@ -185,6 +189,11 @@ public class CarMovement : MonoBehaviour
     public void OnSaveButton()
     {
         nnet.Save();
+    }
+
+    //when a lap has been completed
+    public void CompletedLap() {
+        lapsCompleted++;
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -243,6 +252,7 @@ public class CarMovement : MonoBehaviour
         lifetime = 0f;
         totalDist = 0f;
         avgSpeed = 0f;
+        lapsCompleted = 0.0f;
         lastPosition = startPosition;
         overallFitness = 0f;
         transform.position = startPosition;
