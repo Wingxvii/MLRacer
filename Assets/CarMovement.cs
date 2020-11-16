@@ -62,14 +62,16 @@ public class CarMovement : MonoBehaviour
     public bool inTraining = false;
 
     public RLManager learningManager;
-
-
+    public MapManager mapManager;
+    private bool started = false;
     private void Awake()
     {
         nnet = GetComponent<NeuralNet>();
 
+        /*
         startPosition = transform.position;
         startRotation = transform.eulerAngles;
+        */
         wallMask = LayerMask.GetMask("Wall");
         gates = new List<Tuple<float, float>>
         {
@@ -80,20 +82,33 @@ public class CarMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Sensors();
+        if (started)
+        {
+            Sensors();
 
-        (acceleration, turn) = nnet.RunNetwork(sensors[0], sensors[1], sensors[2]);                     //TODO: adapt network to accomadate variable size input and remove hardcoded sensor arguments
+            (acceleration, turn) = nnet.RunNetwork(sensors[0], sensors[1], sensors[2]);                     //TODO: adapt network to accomadate variable size input and remove hardcoded sensor arguments
 
-        Move(acceleration, turn);
-        lifetime += Time.deltaTime;
+            Move(acceleration, turn);
+            lifetime += Time.deltaTime;
 
-        EvalFitness();
+            EvalFitness();
+        }
 
         //update save button
-        if (saveButton) {
+        if (saveButton)
+        {
             OnSaveButton();
             saveButton = false;
         }
+    }
+
+    public void SetStart(Transform start) {
+        startPosition = start.position;
+        startRotation = start.rotation.eulerAngles;
+
+        this.transform.position = start.position;
+        this.transform.rotation = start.rotation;
+        started = true;
     }
 
     //moves racer
@@ -181,6 +196,33 @@ public class CarMovement : MonoBehaviour
         }
     }
 
+    //check for end gate logic
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Gate1")
+        {
+            mapManager.HitGate(1, false);
+        }
+        else if (other.gameObject.tag == "Gate2")
+        {
+            mapManager.HitGate(2, false);
+        }
+    }
+
+    //check for end gate logic
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "Gate1")
+        {
+            mapManager.HitGate(1, true);
+        }
+        else if (other.gameObject.tag == "Gate2")
+        {
+            mapManager.HitGate(2, true);
+        }
+
+    }
+
     //agent death
     private void Death() {
         if (inTraining && learningManager)
@@ -198,7 +240,6 @@ public class CarMovement : MonoBehaviour
     //reset everthing
     public void Reset()
     {
-
         lifetime = 0f;
         totalDist = 0f;
         avgSpeed = 0f;
