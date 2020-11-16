@@ -25,12 +25,13 @@ public class NeuralNet : MonoBehaviour
     //save data
     private string path;
     public TextAsset networkFile;
+    public bool networkLoaded = false;
 
     //start ONLY WITHOUT training manager
     public void Start()
     {
         //load saved network instead of from training
-        if (!GetComponent<CarMovement>().inTraining)
+        if (!GetComponent<CarMovement>().inTraining && !networkLoaded)
         {
             if (networkFile)
             {
@@ -149,6 +150,7 @@ public class NeuralNet : MonoBehaviour
         weights = WeightArrayToMatrix(save.weights);
         biases = new List<float>(save.biases);
         Debug.Log("Network Loaded.");
+        networkLoaded = true;
     }
 
     //json save method

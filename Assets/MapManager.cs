@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
+using System;
 
 public class MapManager : MonoBehaviour
 {
@@ -14,8 +16,8 @@ public class MapManager : MonoBehaviour
     public bool iterateTracks = false;
 
     //start gate logic
-    public bool firstHit = false;
-    public bool secondHit = false;
+    private bool firstHit = false;
+    private bool secondHit = false;
 
     // Start is called before the first frame update
     void Start()
@@ -27,9 +29,28 @@ public class MapManager : MonoBehaviour
 
             tracks.Add(trackInst);
         }
+        if (AsyncSceneManager.Instance.trainingTrack != -1)
+        {
+            //load user selected scene
+            OpenTrack(AsyncSceneManager.Instance.trainingTrack);
+        }
+        else
+        {
+            //open track 1 by default
+            OpenTrack(0);
+        }
 
-        //open track 1 by default
-        OpenTrack(0);
+        //load training model through menus
+        if (AsyncSceneManager.Instance.modelPath != "") {
+            try{
+                StreamReader sr = new StreamReader(AsyncSceneManager.Instance.modelPath);
+                car.GetComponent<NeuralNet>().Load(sr.ReadToEnd());
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("Model Invalid!");
+            }
+        }        
     }
 
     //open first track

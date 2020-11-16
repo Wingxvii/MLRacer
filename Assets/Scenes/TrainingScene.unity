@@ -5377,7 +5377,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!81 &963194226
 AudioListener:
   m_ObjectHideFlags: 0
@@ -5534,7 +5534,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1114878866
 Transform:
   m_ObjectHideFlags: 0
@@ -5542,8 +5542,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1114878865}
-  m_LocalRotation: {x: -0.035989862, y: 0.009596086, z: 0.00034780972, w: 0.999306}
-  m_LocalPosition: {x: -0.10990098, y: 0.5072552, z: 0.03}
+  m_LocalRotation: {x: 0.03897521, y: -0.015655834, z: -0.00093636307, w: -0.9991171}
+  m_LocalPosition: {x: 0.0014991462, y: 0.28811932, z: 0.09914413}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4167733656918857}
@@ -20453,6 +20453,7 @@ MonoBehaviour:
   overallFitness: 0
   distanceWeight: 1.4
   speedWeight: 0.2
+  lapCompletedWeight: 300
   sensorWeight: 0.1
   sensors:
   - 0
