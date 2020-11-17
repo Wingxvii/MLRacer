@@ -4,7 +4,6 @@ using UnityEngine;
 using MathNet.Numerics.LinearAlgebra;
 using UnityEngine.UI;
 
-
 public class RLManager : MonoBehaviour
 {
     public CarMovement car;
@@ -24,9 +23,12 @@ public class RLManager : MonoBehaviour
     public Text generationText;
     public Text genomeText;
     public Text fitnessText;
-
+    public Text bestText;
+    public Text lifetime;
+    
     public int currentGeneration;
     public int currentGenome;
+    public float bestFitness;
 
     private void Start()
     {
@@ -234,5 +236,12 @@ public class RLManager : MonoBehaviour
         generationText.text = currentGeneration.ToString();
         genomeText.text = currentGenome.ToString();
         fitnessText.text = car.overallFitness.ToString();
+        lifetime.text = car.lifetime.ToString();
+
+        if (car.overallFitness > bestFitness) {
+            bestFitness = car.overallFitness;
+        }
+
+        bestText.text = bestFitness.ToString();
     }
 }

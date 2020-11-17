@@ -7,7 +7,6 @@ using System;
 
 public class StartManager : MonoBehaviour
 {
-    public GameObject training;
     public GameObject testing;
     public GameObject start;
     public Text trackDisplay;
@@ -15,17 +14,13 @@ public class StartManager : MonoBehaviour
 
     private bool isTraining = false;
 
-
     public void Awake()
     {
-        training.SetActive(false);
         testing.SetActive(false);
     }
 
     public void OnHitTraining() {
-        isTraining = true;
-        start.SetActive(false);
-        training.SetActive(true);
+        AsyncSceneManager.Instance.SwapScene(2);
     }
     public void OnHitTesting() {
         isTraining = false;
