@@ -2,13 +2,21 @@
 using System;
 using System.Collections.Generic;
 
+/*
+* Name: John Wang
+* Date: 11/18/20
+* Desc: Car controller class with NN AI support
+*
+*/
+
 [RequireComponent(typeof(NeuralNet))]
 public class CarMovement : MonoBehaviour
 {
-    //spawn
+    //spawn position
     private Vector3 startPosition;
     private Vector3 startRotation;
-
+    
+    //manual controls from editor
     [Header("Controls")]
     public bool saveButton = false;     //budget save button
     [Range(0f, 1f)]
@@ -16,7 +24,7 @@ public class CarMovement : MonoBehaviour
     [Range(-1f, 1f)]
     public float turn;              // output of nn
 
-
+    //physics variables
     [Header("Physics")]
     public float accelRate = 0.02f;
     public float forwardSpeed = 11.4f;
@@ -32,6 +40,7 @@ public class CarMovement : MonoBehaviour
     //idle timer
     public float lifetime = 0f;
 
+    //fitness variables
     [Header("Fitness")]
     public float overallFitness;
     private Vector3 lastPosition;
@@ -64,18 +73,17 @@ public class CarMovement : MonoBehaviour
     //track agent statistics
     public static int alphaAgents = 0;
     public bool inTraining = false;
-
+    
+    //non-singleton manager references
     public RLManager learningManager;
     public MapManager mapManager;
+    
     private bool started = false;
+        
     private void Awake()
     {
+        //setup environment
         nnet = GetComponent<NeuralNet>();
-
-        /*
-        startPosition = transform.position;
-        startRotation = transform.eulerAngles;
-        */
         wallMask = LayerMask.GetMask("Wall");
         gates = new List<Tuple<float, float>>
         {
@@ -83,18 +91,24 @@ public class CarMovement : MonoBehaviour
             new Tuple<float, float>(20, 40)
         };
     }
-
+    
     private void FixedUpdate()
-    {
+    {   
         if (started)
         {
+            //update sensors first
             Sensors();
-
+            
+            //then run network
             (acceleration, turn) = nnet.RunNetwork(sensors[0], sensors[1], sensors[2]);                     //TODO: adapt network to accomadate variable size input and remove hardcoded sensor arguments
-
+            
+            //move according to network output
             Move(acceleration, turn);
+            
+            //iterate lift
             lifetime += Time.deltaTime;
-
+            
+            //evaluate fitness last
             EvalFitness();
         }
 
@@ -106,6 +120,7 @@ public class CarMovement : MonoBehaviour
         }
     }
 
+    //set starting position data
     public void SetStart(Transform start) {
         startPosition = start.position;
         startRotation = start.rotation.eulerAngles;
@@ -126,7 +141,8 @@ public class CarMovement : MonoBehaviour
         //rotation
         transform.eulerAngles += new Vector3(0, rot * 90 * turnRate, 0);
     }
-
+    
+    //calculate sensor input
     private void Sensors() {
         //init sensor directions
         Vector3[] dirs = { transform.forward + transform.right, transform.forward, transform.forward - transform.right };
