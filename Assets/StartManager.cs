@@ -8,7 +8,6 @@ using System;
  * Name: John Wang
  * Date: 11/17/2020
  * Desc: Manager for game start menu logic
- *
  * 
  */ 
 public class StartManager : MonoBehaviour
@@ -20,10 +19,12 @@ public class StartManager : MonoBehaviour
     public InputField modelSelection;
     public Text perspective;
 
+    //bool tracking which gamemode player requests
     private bool isTraining = false;
 
     public void Awake()
-    {
+    {   
+        //deactivate testing second UI canvas
         testing.SetActive(false);
     }
 
@@ -43,15 +44,18 @@ public class StartManager : MonoBehaviour
     public void OnBegin() {
         if (isTraining)
         {
+            //if training is hit, go to training
             AsyncSceneManager.Instance.SwapScene(2);
         }
         else {
+            //exception handling for model path
             if (AsyncSceneManager.Instance.modelPath == "")
             {
                 Debug.LogWarning("Please Input Model Path");
             }
             else
             {
+                //model path file exception handling
                 bool validated = false;
                 try
                 {
@@ -67,6 +71,7 @@ public class StartManager : MonoBehaviour
 
                 if (validated)
                 {
+                    //move to testing once model is validated
                     AsyncSceneManager.Instance.SwapScene(3);
                 }
             }
@@ -79,18 +84,21 @@ public class StartManager : MonoBehaviour
         trackDisplay.text = (track + 1).ToString();
     }
 
-    //
+    //model path input update
     public void UpdatePath() {
         AsyncSceneManager.Instance.modelPath = modelSelection.text;
     }
 
+    //perspective change logic
     public void OnPerspective() {
         if (AsyncSceneManager.Instance.perspectiveBool) {
+            //change to third person
             AsyncSceneManager.Instance.perspectiveBool = false;
             perspective.text = "Third Person";
         }
         else
         {
+            //change to first person
             AsyncSceneManager.Instance.perspectiveBool = true;
             perspective.text = "First Person";
         }
