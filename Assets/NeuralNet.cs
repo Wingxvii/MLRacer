@@ -7,6 +7,13 @@ using MathNet.Numerics.LinearAlgebra;
 using Random = UnityEngine.Random;
 using System.IO;
 
+/*
+* Name: John Wang
+* Date: 11/18/20
+* Desc: Neural Net data type for storing a saveable/loadable neural net
+*
+*/
+
 public class NeuralNet : MonoBehaviour
 {
 
@@ -14,9 +21,10 @@ public class NeuralNet : MonoBehaviour
     public Matrix<float> inputLayer = Matrix<float>.Build.Dense(1, 3);      //[sensor[0], sensor[1], sensor[2]] input layer
     public List<Matrix<float>> hiddenLayers = new List<Matrix<float>>();    //hidden layers
     public List<Matrix<float>> weights = new List<Matrix<float>>();         //weights
-    public List<float> biases = new List<float>();                         //biases
+    public List<float> biases = new List<float>();                          //biases
     public Matrix<float> outputLayer = Matrix<float>.Build.Dense(1, 2);     //[acceleration, turn] output layer
 
+    //hidden layers parameters
     public int hiddenLayersCount = 0;
     public int hiddenNeuronsCount = 0;
 
@@ -110,7 +118,7 @@ public class NeuralNet : MonoBehaviour
         RandomizeWeights();
     }
 
-    //object used for json seralize
+    //object used for json seralization
     public class SerializableNetwork
     {
         public int hiddenLayersCount;
@@ -134,11 +142,11 @@ public class NeuralNet : MonoBehaviour
         //reinit input and output layers
         inputLayer = Matrix<float>.Build.Dense(1, 3);
         outputLayer = Matrix<float>.Build.Dense(1, 2);
-
-        Debug.Log(json);
-
+        
+        //deseralize
         SerializableNetwork save = JsonConvert.DeserializeObject<SerializableNetwork>(json);
-
+        
+        //reinit hidden layers
         this.hiddenLayersCount = save.hiddenLayersCount;
         this.hiddenNeuronsCount = save.hiddenNeuronsCount;
 
@@ -146,7 +154,8 @@ public class NeuralNet : MonoBehaviour
         {
             hiddenLayers.Add(Matrix<float>.Build.Dense(1, save.hiddenNeuronsCount));
         }
-
+        
+        //copy over weights and biases
         weights = WeightArrayToMatrix(save.weights);
         biases = new List<float>(save.biases);
         Debug.Log("Network Loaded.");
@@ -159,16 +168,20 @@ public class NeuralNet : MonoBehaviour
         //init path and id
         string ID = DateTime.Now.Ticks.ToString();
         path = Application.dataPath + "/NetworkFiles";
-
+        
+        //create seralizable object
         SerializableNetwork save = new SerializableNetwork();
-
+        
+        //save hidden layers
         save.hiddenLayersCount = hiddenLayersCount;
         save.hiddenNeuronsCount = hiddenNeuronsCount;
-
-        save.weights = WeightMatrixToArray(weights);
+        
+        //save weights and biases
+        save.weights = WeightMatrixToArray(weights);    //weights cant be saved as matrix, must convert to lists
         save.biases = biases.ToArray();
-
-        string json = JsonConvert.SerializeObject(save);
+        
+        //save
+        string json = JsonConvert.SerializeObject(save);    
         File.WriteAllText(path + "/network" + ID + ".txt", json);
         Debug.Log("Network Saved.");
     }
@@ -208,7 +221,8 @@ public class NeuralNet : MonoBehaviour
             }
         }
     }
-
+    
+    //calculate output neurons based on input neuron data
     public (float, float) RunNetwork(float a, float b, float c) {
         inputLayer[0, 0] = a;
         inputLayer[0, 1] = b;
@@ -222,14 +236,14 @@ public class NeuralNet : MonoBehaviour
 
         //remaining hidden layers
         for (int i = 1; i < hiddenLayers.Count; i++) {
-            hiddenLayers[i] = ((hiddenLayers[i - 1] * weights[i]) + biases[i]).PointwiseTanh();
+            hiddenLayers[i] = ((hiddenLayers[i - 1] * weights[i]) + biases[i]).PointwiseTanh(); 
         }
 
         //output layer
         outputLayer = ((hiddenLayers[hiddenLayers.Count - 1] * weights[weights.Count - 1]) + biases[biases.Count - 1]).PointwiseTanh();
 
         //outputs acceleration and turn
-        return (Sigmoid(outputLayer[0,0]), (float)Math.Tanh(outputLayer[0,1]));
+        return (Sigmoid(outputLayer[0,0]), (float)Math.Tanh(outputLayer[0,1])); //use sigmoid for acceleration because it cant be negative
     }
 
     //sigmoid function activation
