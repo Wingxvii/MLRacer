@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using MathNet.Numerics.LinearAlgebra;
 using UnityEngine.UI;
-
+/*
+* Name:John Wang 
+* Date: 11/18/20
+* Desc: Manager for Reinforcement Learning operations on race car
+*/
 public class RLManager : MonoBehaviour
 {
     public CarMovement car;
@@ -15,23 +19,27 @@ public class RLManager : MonoBehaviour
     public int bestAgentSelection = 8;
     public int worseAgentSelection = 3;
     public int numberToCrossover;
-
+    
+    //population iteration
     private List<int> genePool = new List<int>();
     private int naturalSelected;
     private NeuralNet[] population;
 
+    //display text references
     public Text generationText;
     public Text genomeText;
     public Text fitnessText;
     public Text bestText;
     public Text lifetime;
     
+    //variables for display
     public int currentGeneration;
     public int currentGenome;
     public float bestFitness;
 
     private void Start()
     {
+        //init starting population
         CreatePopulation();
     }
 
@@ -213,10 +221,9 @@ public class RLManager : MonoBehaviour
         return mutatedWeight;
     }
 
-    //sort by fitness
+    //sort by fitness to distinguish the best and worst crossover candidates
     private void SortPopulation()
     {
-        //bubble sort
         for (int x = 0; x < population.Length; x++)
         {
             for (int y = 0; y < population.Length; y++)
@@ -230,7 +237,7 @@ public class RLManager : MonoBehaviour
         }
     }
 
-    //updates text display  
+    //updates text display for user
     private void FixedUpdate()
     {
         generationText.text = currentGeneration.ToString();
