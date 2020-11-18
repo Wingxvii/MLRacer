@@ -1,10 +1,15 @@
 ﻿using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine;
-
+/*
+* Name: John Wang  
+* Date: 11/18/20
+* Desc: Singleton scene manager script
+*
+*/
 public class AsyncSceneManager : MonoBehaviour
 {
-
+    //singleton stuff
     #region SingletonCode
     private static AsyncSceneManager _instance;
     public static AsyncSceneManager Instance { get { return _instance; } }
@@ -24,7 +29,8 @@ public class AsyncSceneManager : MonoBehaviour
     }
     //single pattern ends here
     #endregion
-
+    
+    //track current scene(other from the async scene)
     public int loadedScene = 1;
 
     //use to swap scene
