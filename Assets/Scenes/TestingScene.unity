@@ -159,6 +159,8 @@ MonoBehaviour:
   currentTrack: {fileID: 0}
   currentTrackNum: 0
   iterateTracks: 1
+  fps: {fileID: 1114878868}
+  tp: {fileID: 963194227}
 --- !u!4 &463476438
 Transform:
   m_ObjectHideFlags: 0
@@ -5195,7 +5197,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!81 &963194226
 AudioListener:
   m_ObjectHideFlags: 0

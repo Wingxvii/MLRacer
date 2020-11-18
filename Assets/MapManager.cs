@@ -15,9 +15,24 @@ public class MapManager : MonoBehaviour
     public int currentTrackNum = 0;
     public bool iterateTracks = false;
 
+    public Camera fps;
+    public Camera tp;
+
     //start gate logic
     private bool firstHit = false;
     private bool secondHit = false;
+
+    private void Awake()
+    {
+        if (AsyncSceneManager.Instance.perspectiveBool)
+        {
+            fps.gameObject.SetActive(true);
+        }
+        else
+        {
+            tp.gameObject.SetActive(true);
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -50,7 +65,8 @@ public class MapManager : MonoBehaviour
             {
                 Debug.LogError("Model Invalid!");
             }
-        }        
+        }
+
     }
 
     //open first track

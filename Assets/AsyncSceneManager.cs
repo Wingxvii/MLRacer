@@ -50,5 +50,6 @@ public class AsyncSceneManager : MonoBehaviour
     //start variables
     public int trainingTrack = -1;
     public string modelPath = "";
+    public bool perspectiveBool = true;
 
 }
