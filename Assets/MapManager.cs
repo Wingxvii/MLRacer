@@ -1,20 +1,30 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using System;
+/*
+* Name: John Wang
+* Date: 11/18/20
+* Desc: Manager for map, track control and perspetive
+*
+*/
 
 public class MapManager : MonoBehaviour
 {
+    //ref to car
     public CarMovement car;
-
+    
+    //lists of all tracks
     public GameObject[] trackPrefabs;
     private List<GameObject> tracks = new List<GameObject>();
 
+    //track variables
     public GameObject currentTrack;
     public int currentTrackNum = 0;
     public bool iterateTracks = false;
-
+    
+    //camera references
     public Camera fps;
     public Camera tp;
 
@@ -24,6 +34,7 @@ public class MapManager : MonoBehaviour
 
     private void Awake()
     {
+        //init perspective on awake
         if (AsyncSceneManager.Instance.perspectiveBool)
         {
             fps.gameObject.SetActive(true);
@@ -83,22 +94,27 @@ public class MapManager : MonoBehaviour
 
     //look at gate logic
     public void HitGate(int gateNum, bool exited) {
+        //check to see if user entered gate 1
         if (gateNum == 1 && !exited)
         {
             if (secondHit && !firstHit)
             {
+                //if gate 2 is already entered, and first wasn't already hit, we know the car passed through the right way
                 LapCompleted();
             }
             else {
+                //if ai re-enters first gate, after leaving the wrong way, dont end the lap
                 firstHit = true;
             }
         }
         else if (gateNum == 1 && exited) {
+            //if player exits the gate without hitting second, reset firstHit, and let them count the lap next time they pass
             if (!secondHit)
             {
                 firstHit = false;
             }
         }
+        //check second hit
         else if (gateNum == 2 && !exited)
         {
             secondHit = true;
@@ -117,6 +133,7 @@ public class MapManager : MonoBehaviour
             {
                 currentTrackNum = 0;
             }
+            //go to next track
             OpenTrack(currentTrackNum);
         }
 
