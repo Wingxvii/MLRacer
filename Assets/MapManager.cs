@@ -80,6 +80,13 @@ public class MapManager : MonoBehaviour
 
     }
 
+    private void Update() {
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+    }
+
     //open first track
     void OpenTrack(int trackNum)
     {

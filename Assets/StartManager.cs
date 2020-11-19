@@ -103,4 +103,9 @@ public class StartManager : MonoBehaviour
             perspective.text = "First Person";
         }
     }
+
+    //exit button
+    public void exitButton() {
+        Application.Quit();
+    }
 }
