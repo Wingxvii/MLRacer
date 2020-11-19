@@ -4,7 +4,7 @@ using UnityEngine;
 using MathNet.Numerics.LinearAlgebra;
 using UnityEngine.UI;
 /*
-* Name:John Wang 
+* Name: John Wang, Boris Au, Alex Siciak
 * Date: 11/18/20
 * Desc: Manager for Reinforcement Learning operations on race car
 */

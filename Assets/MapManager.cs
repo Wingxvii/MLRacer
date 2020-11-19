@@ -4,7 +4,7 @@ using UnityEngine;
 using System.IO;
 using System;
 /*
-* Name: John Wang
+* Name: John Wang, Boris Au, Alex Siciak
 * Date: 11/18/20
 * Desc: Manager for map, track control and perspetive
 *

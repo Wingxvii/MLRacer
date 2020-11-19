@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 
 /*
-* Name: John Wang
+* Name: John Wang, Boris Au, Alex Siciak
 * Date: 11/18/20
 * Desc: Car controller class with NN AI support
 *
@@ -77,6 +77,9 @@ public class CarMovement : MonoBehaviour
     //non-singleton manager references
     public RLManager learningManager;
     public MapManager mapManager;
+
+    //sounds
+    public AudioSource carHit;
     
     private bool started = false;
         
@@ -90,6 +93,8 @@ public class CarMovement : MonoBehaviour
             //add gates here
             new Tuple<float, float>(20, 40)
         };
+
+        carHit = GetComponent<AudioSource>();
     }
     
     private void FixedUpdate()
@@ -254,6 +259,8 @@ public class CarMovement : MonoBehaviour
         {
             learningManager.Death(overallFitness, nnet);
         }
+
+        carHit.Play();
     }
 
     //reset network

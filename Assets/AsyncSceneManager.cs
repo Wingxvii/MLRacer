@@ -2,7 +2,7 @@
 using UnityEngine.SceneManagement;
 using UnityEngine;
 /*
-* Name: John Wang  
+* Name: John Wang, Boris Au, Alex Siciak 
 * Date: 11/18/20
 * Desc: Singleton scene manager script
 *

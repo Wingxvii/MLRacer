@@ -5,11 +5,11 @@ using UnityEngine.UI;
 using System.IO;
 using System;
 /*
- * Name: John Wang
+ * Name: John Wang, Boris Au, Alex Siciak
  * Date: 11/17/2020
  * Desc: Manager for game start menu logic
  * 
- */ 
+ */
 public class StartManager : MonoBehaviour
 {
     //references to start menu ui assets

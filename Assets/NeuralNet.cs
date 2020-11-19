@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 using System.IO;
 
 /*
-* Name: John Wang
+* Name: John Wang, Boris Au, Alex Siciak
 * Date: 11/18/20
 * Desc: Neural Net data type for storing a saveable/loadable neural net
 *
