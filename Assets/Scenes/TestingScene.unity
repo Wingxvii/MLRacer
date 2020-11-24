@@ -19893,7 +19893,7 @@ MonoBehaviour:
   useGate: 1
   inTraining: 0
   learningManager: {fileID: 0}
-  mapManager: {fileID: 0}
+  mapManager: {fileID: 463476437}
   carHit: {fileID: 0}
 --- !u!114 &1642630390158487
 MonoBehaviour:
@@ -19911,7 +19911,7 @@ MonoBehaviour:
   hiddenLayersCount: 0
   hiddenNeuronsCount: 0
   fitness: 0
-  networkFile: {fileID: 4900000, guid: a0b410d32b6664f4ba6a0e94a1ed50ea, type: 3}
+  networkFile: {fileID: 0}
   networkLoaded: 0
 --- !u!82 &1642630390158488
 AudioSource:

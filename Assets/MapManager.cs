@@ -35,7 +35,7 @@ public class MapManager : MonoBehaviour
     private void Awake()
     {
         //init perspective on awake
-        if (AsyncSceneManager.Instance.perspectiveBool)
+        if (AsyncSceneManager.Instance && AsyncSceneManager.Instance.perspectiveBool)
         {
             fps.gameObject.SetActive(true);
         }
@@ -55,7 +55,7 @@ public class MapManager : MonoBehaviour
 
             tracks.Add(trackInst);
         }
-        if (AsyncSceneManager.Instance.trainingTrack != -1)
+        if (AsyncSceneManager.Instance && AsyncSceneManager.Instance.trainingTrack != -1)
         {
             //load user selected scene
             OpenTrack(AsyncSceneManager.Instance.trainingTrack);
@@ -67,7 +67,7 @@ public class MapManager : MonoBehaviour
         }
 
         //load training model through menus
-        if (AsyncSceneManager.Instance.modelPath != "") {
+        if (AsyncSceneManager.Instance && AsyncSceneManager.Instance.modelPath != "") {
             try{
                 StreamReader sr = new StreamReader(AsyncSceneManager.Instance.modelPath);
                 car.GetComponent<NeuralNet>().Load(sr.ReadToEnd());
