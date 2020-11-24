@@ -20781,7 +20781,7 @@ MonoBehaviour:
   wallMask:
     serializedVersion: 2
     m_Bits: 0
-  successGate: 2000
+  successGate: 8000
   useGate: 1
   inTraining: 1
   learningManager: {fileID: 1432369095}
